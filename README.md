@@ -1,4 +1,4 @@
-![Design preview for the Clock app coding challenge](./assets/preview.jpg)
+![Design preview for the Clock app coding challenge](/src/assets/preview.jpg)
 
 ## The challenge
 
