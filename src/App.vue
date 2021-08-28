@@ -8,7 +8,7 @@
       <p>Day of Week: {{ time.day_of_week }}</p>
       <p>Day of Year: {{ time.day_of_year }}</p>
       <p>Week Number: {{ time.week_number }}</p>
-      <p>Time: {{ time.datetime }}</p>
+      <p>Time: {{ currentTime }}</p>
     </div>
   </div>
 </template>
@@ -27,29 +27,43 @@ export default {
       country: "",
       city: "",
       time: "",
+      currentTime: "",
     };
   },
-  async created() {
-    await axios
-      .get(this.ipApi)
-      .then((res) => {
-        console.log(res);
-        this.region = res.data;
-        let timeZone = res.data.time_zone;
-        let split = timeZone.split("/");
-        this.country = split[0];
-        this.city = split[1];
-      })
-      .catch((err) => console.log(err));
-
-    await axios
-      .get(this.timeApi + "/" + this.country + "/" + this.city)
-      .then((res) => {
-        console.log(res.data);
-        this.time = res.data;
-      });
+  created() {
+    this.getTime();
+    //this.updateTime();
+    this.getRegion();
   },
-  methods: {},
+  methods: {
+    getTime() {
+      axios
+        .get(this.timeApi + "/" + this.country + "/" + this.city)
+        .then((res) => {
+          this.time = res.data;
+          let date = new Date();
+          let current = date.getHours() + ":" + date.getMinutes();
+          this.currentTime = current;
+        });
+      //this.updateTime();
+    },
+    /*updateTime() {
+      //let interval = (60 - new Date().getSeconds()) * 1000 + 5;
+      setInterval(this.getTime(), 1000);
+    },*/
+    getRegion() {
+      axios
+        .get(this.ipApi)
+        .then((res) => {
+          this.region = res.data;
+          let timeZone = res.data.time_zone;
+          let split = timeZone.split("/");
+          this.country = split[0];
+          this.city = split[1];
+        })
+        .catch((err) => console.log(err));
+    },
+  },
 };
 </script>
 
