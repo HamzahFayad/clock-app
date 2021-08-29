@@ -30,29 +30,14 @@ export default {
       currentTime: "",
     };
   },
-  created() {
-    this.getTime();
+  async created() {
+    await this.getRegion();
+    await this.getTime();
     //this.updateTime();
-    this.getRegion();
   },
   methods: {
-    getTime() {
-      axios
-        .get(this.timeApi + "/" + this.country + "/" + this.city)
-        .then((res) => {
-          this.time = res.data;
-          let date = new Date();
-          let current = date.getHours() + ":" + date.getMinutes();
-          this.currentTime = current;
-        });
-      //this.updateTime();
-    },
-    /*updateTime() {
-      //let interval = (60 - new Date().getSeconds()) * 1000 + 5;
-      setInterval(this.getTime(), 1000);
-    },*/
-    getRegion() {
-      axios
+    async getRegion() {
+      await axios
         .get(this.ipApi)
         .then((res) => {
           this.region = res.data;
@@ -63,6 +48,22 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    async getTime() {
+      await axios
+        .get(this.timeApi + "/" + this.country + "/" + this.city)
+        .then((res) => {
+          this.time = res.data;
+          console.log(this.country);
+          let date = new Date();
+          let current = date.getHours() + ":" + date.getMinutes();
+          this.currentTime = current;
+        });
+      //this.updateTime();
+    },
+    /*updateTime() {
+      //let interval = (60 - new Date().getSeconds()) * 1000 + 5;
+      setInterval(this.getTime(), 1000);
+    },*/
   },
 };
 </script>
